@@ -10,11 +10,14 @@ import {
 } from "../ui/card";
 import { Button } from "../ui/button";
 import PlaceSelector from "./placeSelector";
+import type { Place } from "../../types/Place";
+import WeatherDrawer from "./weatherDrawer";
 
 function Home() {
-  const [selectedPlace, setSelectedPlace] = useState("");
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [drawerOpen, setdrawerOpen] = useState(false);
 
-  const handlePlaceChange = (value: string) => {
+  const handlePlaceChange = (value: Place) => {
     setSelectedPlace(value);
     console.log("Lugar seleccionado:", value);
   };
@@ -33,7 +36,7 @@ function Home() {
             </CardAction>
           </CardHeader>
           <CardContent>
-           <PlaceSelector onChange={handlePlaceChange} />
+            <PlaceSelector onChange={handlePlaceChange} />
           </CardContent>
           <CardFooter className="flex-col gap-2">
             <Button
@@ -41,14 +44,24 @@ function Home() {
               className="w-full"
               variant="outline"
               onClick={() => {
-                console.log("Buscando datos de:", selectedPlace);
+                if (selectedPlace) {
+                  setdrawerOpen(true);
+                } else {
+                  alert("error");
+                }
               }}
             >
               Buscar
             </Button>
           </CardFooter>
         </Card>
-      </div>
+      </div>     
+
+      <WeatherDrawer
+        open={drawerOpen}
+        onOpenChange={setdrawerOpen}
+        place={selectedPlace}
+      ></WeatherDrawer>
     </>
   );
 }
