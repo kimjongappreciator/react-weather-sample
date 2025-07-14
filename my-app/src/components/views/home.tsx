@@ -17,7 +17,7 @@ import { toast } from "sonner";
 
 function Home() {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  const [drawerOpen, setdrawerOpen] = useState(false);
+  const [drawerOpen, setdrawerOpen] = useState(false);   
 
   const handlePlaceChange = (value: Place) => {
     setSelectedPlace(value);

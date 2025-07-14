@@ -10,6 +10,9 @@ import {
   DrawerTitle,
 } from "../ui/drawer";
 import type React from "react";
+import { useEffect, useState } from "react";
+import type { Result } from "../../types/result";
+import type { WeatherType } from "../../types/weatherType";
 
 type WeatherDrawerProps = {
   open: boolean;
@@ -28,7 +31,7 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 
-const drawerStyle = {
+const drawerStyle: Record<WeatherType,string> = {
   clear: "mx-auto w-full max-w-lg bg-yellow-100 text-yellow-900",
   rainy: "mx-auto w-full max-w-lg bg-blue-200 text-blue-900",
   cloudy: "mx-auto w-full max-w-lg bg-gray-200 text-gray-1000",
@@ -38,10 +41,40 @@ const drawerStyle = {
   foggy: "mx-auto w-full max-w-lg bg-gray-300 text-gray-900",  
 };
 
+function getWeatherData(place: Place) : Result {
+
+  if(place.name === "Huaraz") {
+    return {
+      weather: "stormy",
+      temperature: 10,
+      humidity: 70,
+    };
+  }
+
+  const weatherData: Result = {
+    weather: "clear", // Simulated data, replace with actual API call
+    temperature: 23, 
+    humidity: 60,
+  };
+  return weatherData
+}
+
 function WeatherDrawer({ open, onOpenChange, place }: WeatherDrawerProps) {
-  const weather = "rainy"; // o viene de la API
-  const currentStyle = drawerStyle[weather] ?? "bg-white text-black ";
+   const [result, setResult] = useState<Result | null>(null);
+
+  useEffect(() => {
+    if (place) {
+      const data = getWeatherData(place);
+      setResult(data);
+    }
+  }, [place]);
+
+  const weather = result?.weather || "clear"; // usa el valor del resultado
+  const currentStyle = drawerStyle[weather] ?? "bg-white text-black";  
   const CurrentIcon = iconMap[weather] || Sun;
+
+  
+  
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -57,7 +90,7 @@ function WeatherDrawer({ open, onOpenChange, place }: WeatherDrawerProps) {
         </div>
 
         <div className="p-4 text-sm text-muted-foreground text-center">
-           Clima simulado: Soleado, 23°C, humedad 60%
+           Clima simulado: {result?.weather}, {result?.temperature}°C, humedad {result?.humidity}%
         </div>
 
         <div className="p-4">
