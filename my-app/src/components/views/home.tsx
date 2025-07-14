@@ -12,14 +12,16 @@ import { Button } from "../ui/button";
 import PlaceSelector from "./placeSelector";
 import type { Place } from "../../types/Place";
 import WeatherDrawer from "./weatherDrawer";
+import { Toaster } from "../ui/sonner";
+import { toast } from "sonner";
+
 
 function Home() {
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [drawerOpen, setdrawerOpen] = useState(false);
 
   const handlePlaceChange = (value: Place) => {
-    setSelectedPlace(value);
-    console.log("Lugar seleccionado:", value);
+    setSelectedPlace(value);    
   };
 
   return (
@@ -46,8 +48,14 @@ function Home() {
               onClick={() => {
                 if (selectedPlace) {
                   setdrawerOpen(true);
-                } else {
-                  alert("error");
+                } else {                  
+                  toast('Por favor, selecciona un lugar primero.', {
+                    description: 'No se puede mostrar el clima sin un lugar seleccionado.',
+                  action: {
+                    label: 'Entendido',
+                    onClick: () => toast.dismiss(),
+                    
+                  }})                  
                 }
               }}
             >
@@ -62,7 +70,9 @@ function Home() {
         onOpenChange={setdrawerOpen}
         place={selectedPlace}
       ></WeatherDrawer>
-    </>
+      <Toaster className="bg-black"/>
+      </>
+    
   );
 }
 export default Home;
