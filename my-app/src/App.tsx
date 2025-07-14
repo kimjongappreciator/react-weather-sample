@@ -1,13 +1,16 @@
-
 //import "./App.css";
 
-import  Home  from "./components/views/home";
+import { ThemeProvider } from "./components/theme-provider";
+import { ModeToggle } from "./components/ui/mode-toggle";
+import Home from "./components/views/home";
 
-function App() {  
-
+function App() {
   return (
     <>
-      <Home></Home>      
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <ModeToggle />
+        <Home></Home>
+      </ThemeProvider>
     </>
   );
 }

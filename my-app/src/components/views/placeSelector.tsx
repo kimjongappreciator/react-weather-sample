@@ -1,4 +1,4 @@
-import type { Place } from "../../types/Place";
+import type { Place } from "../../types/place";
 import {
   Select,
   SelectContent,
@@ -31,7 +31,7 @@ function PlaceSelector({ onChange, value }: PlaceSelectorProps) {
       }}      
     >
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Select a place" />
+        <SelectValue placeholder="Selecciona un lugar" />
       </SelectTrigger>
       <SelectContent className="bg-white shadow-g rounded-s-md border">
         <SelectGroup>

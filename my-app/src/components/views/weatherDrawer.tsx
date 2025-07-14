@@ -1,4 +1,4 @@
-import type { Place } from "../../types/Place";
+import type { Place } from "../../types/place";
 import { Button } from "../ui/button";
 import { Cloud, Sun, CloudRain, Snowflake, Wind, CloudLightning, Haze } from "lucide-react"
 import {
@@ -39,7 +39,7 @@ const drawerStyle = {
 };
 
 function WeatherDrawer({ open, onOpenChange, place }: WeatherDrawerProps) {
-  const weather = "clear"; // o viene de la API
+  const weather = "rainy"; // o viene de la API
   const currentStyle = drawerStyle[weather] ?? "bg-white text-black ";
   const CurrentIcon = iconMap[weather] || Sun;
 
