@@ -1,6 +1,14 @@
 import type { Place } from "../../types/place";
 import { Button } from "../ui/button";
-import { Cloud, Sun, CloudRain, Snowflake, Wind, CloudLightning, Haze } from "lucide-react"
+import {
+  Cloud,
+  Sun,
+  CloudRain,
+  Snowflake,
+  Wind,
+  CloudLightning,
+  Haze,
+} from "lucide-react";
 import {
   Drawer,
   DrawerClose,
@@ -13,6 +21,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import type { Result } from "../../types/result";
 import type { WeatherType } from "../../types/weatherType";
+import { simulatedData } from "../../types/simulatedData";
 
 type WeatherDrawerProps = {
   open: boolean;
@@ -27,36 +36,27 @@ const iconMap: Record<string, React.ElementType> = {
   snowy: Snowflake,
   windy: Wind,
   stormy: CloudLightning,
-  foggy: Haze 
+  foggy: Haze,
 };
 
-
-const drawerStyle: Record<WeatherType,string> = {
+const drawerStyle: Record<WeatherType, string> = {
   clear: "mx-auto w-full max-w-lg bg-yellow-100 text-yellow-900",
   rainy: "mx-auto w-full max-w-lg bg-blue-200 text-blue-900",
   cloudy: "mx-auto w-full max-w-lg bg-gray-200 text-gray-1000",
   snowy: "mx-auto w-full max-w-lg bg-white text-gray-900",
   windy: "mx-auto w-full max-w-lg bg-green-100 text-green-800",
   stormy: "mx-auto w-full max-w-lg bg-gray-400 text-gray-700",
-  foggy: "mx-auto w-full max-w-lg bg-gray-300 text-gray-900",  
+  foggy: "mx-auto w-full max-w-lg bg-gray-300 text-gray-900",
 };
 
-function getWeatherData(place: Place) : Result {
-
-  if(place.name === "Huaraz") {
-    return {
-      weather: "stormy",
-      temperature: 10,
-      humidity: 70,
-    };
-  }
-
-  const weatherData: Result = {
-    weather: "clear", // Simulated data, replace with actual API call
-    temperature: 23, 
-    humidity: 60,
-  };
-  return weatherData
+function getWeatherData(place: Place): Result {
+  return (
+    simulatedData[place.name] || {
+      weather: "clear",
+      temperature: 20,
+      humidity: 50,
+    }
+  );
 }
 
 const translatedWeatherType: Record<string, string> = {
@@ -67,10 +67,10 @@ const translatedWeatherType: Record<string, string> = {
   windy: "ventoso",
   stormy: "tormentoso",
   foggy: "neblinoso",
-}
+};
 
 function WeatherDrawer({ open, onOpenChange, place }: WeatherDrawerProps) {
-   const [result, setResult] = useState<Result | null>(null);
+  const [result, setResult] = useState<Result | null>(null);
 
   useEffect(() => {
     if (place) {
@@ -80,11 +80,8 @@ function WeatherDrawer({ open, onOpenChange, place }: WeatherDrawerProps) {
   }, [place]);
 
   const weather = result?.weather || "clear"; // usa el valor del resultado
-  const currentStyle = drawerStyle[weather] ?? "bg-white text-black";  
+  const currentStyle = drawerStyle[weather] ?? "bg-white text-black";
   const CurrentIcon = iconMap[weather] || Sun;
-
-  
-  
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -100,7 +97,8 @@ function WeatherDrawer({ open, onOpenChange, place }: WeatherDrawerProps) {
         </div>
 
         <div className="p-4 text-sm text-muted-foreground text-center">
-           Clima simulado: {translatedWeatherType[weather]}, {result?.temperature}°C, humedad {result?.humidity}%
+          Clima simulado: {translatedWeatherType[weather]},{" "}
+          {result?.temperature}°C, humedad {result?.humidity}%
         </div>
 
         <div className="p-4">
