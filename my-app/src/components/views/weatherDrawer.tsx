@@ -59,6 +59,16 @@ function getWeatherData(place: Place) : Result {
   return weatherData
 }
 
+const translatedWeatherType: Record<string, string> = {
+  clear: "despejado",
+  rainy: "lluvioso",
+  cloudy: "nublado",
+  snowy: "nevado",
+  windy: "ventoso",
+  stormy: "tormentoso",
+  foggy: "neblinoso",
+}
+
 function WeatherDrawer({ open, onOpenChange, place }: WeatherDrawerProps) {
    const [result, setResult] = useState<Result | null>(null);
 
@@ -90,7 +100,7 @@ function WeatherDrawer({ open, onOpenChange, place }: WeatherDrawerProps) {
         </div>
 
         <div className="p-4 text-sm text-muted-foreground text-center">
-           Clima simulado: {result?.weather}, {result?.temperature}°C, humedad {result?.humidity}%
+           Clima simulado: {translatedWeatherType[weather]}, {result?.temperature}°C, humedad {result?.humidity}%
         </div>
 
         <div className="p-4">
