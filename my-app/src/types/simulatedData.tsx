@@ -18,8 +18,30 @@ const cuzcoMock: Result = {
   humidity: 70,
 };
 
+const narniaMock: Result = {
+  weather: "snowy",
+  temperature: -5,
+  humidity: 80
+};
+
+const middleEarthMock: Result = {
+  weather: "windy",
+  temperature: 5,
+  humidity: 90,
+};
+
+const sillentHillMock: Result = {
+  weather: "foggy",
+  temperature: 7,
+  humidity: 95,
+};
+
+
 export const simulatedData: Record<string, Result> = {
   Huaraz: huarazMock,
   Lima: limaMock,
   Cuzco: cuzcoMock,
+  Narnia: narniaMock,
+  SillentHill: sillentHillMock,
+  MiddleEarth: middleEarthMock,
 };

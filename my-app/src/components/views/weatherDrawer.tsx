@@ -43,10 +43,10 @@ const drawerStyle: Record<WeatherType, string> = {
   clear: "mx-auto w-full max-w-lg bg-yellow-100 text-yellow-900",
   rainy: "mx-auto w-full max-w-lg bg-blue-200 text-blue-900",
   cloudy: "mx-auto w-full max-w-lg bg-gray-200 text-gray-1000",
-  snowy: "mx-auto w-full max-w-lg bg-white text-gray-900",
+  snowy: "mx-auto w-full max-w-lg bg-blue-100 text-blue-900 border border-blue-300 shadow-inner",
   windy: "mx-auto w-full max-w-lg bg-green-100 text-green-800",
   stormy: "mx-auto w-full max-w-lg bg-gray-400 text-gray-700",
-  foggy: "mx-auto w-full max-w-lg bg-gray-300 text-gray-900",
+  foggy: "mx-auto w-full max-w-lg bg-gray-900 text-gray-200 border border-gray-800 shadow-[0_0_20px_#1f1f1f] backdrop-blur-sm",  
 };
 
 function getWeatherData(place: Place): Result {
