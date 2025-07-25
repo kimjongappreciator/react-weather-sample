@@ -46,7 +46,7 @@ const drawerStyle: Record<WeatherType, string> = {
   snowy: "mx-auto w-full max-w-lg bg-blue-100 text-blue-900 border border-blue-300 shadow-inner",
   windy: "mx-auto w-full max-w-lg bg-green-100 text-green-800",
   stormy: "mx-auto w-full max-w-lg bg-gray-400 text-gray-700",
-  foggy: "mx-auto w-full max-w-lg bg-gray-900 text-gray-200 border border-gray-800 shadow-[0_0_20px_#1f1f1f] backdrop-blur-sm",  
+  foggy: "mx-auto w-full max-w-lg bg-[#111111] text-[#cccccc] border border-[#2a2a2a] shadow-[0_0_30px_#0a0a0a] backdrop-blur-md font-mono",  
 };
 
 function getWeatherData(place: Place): Result {
