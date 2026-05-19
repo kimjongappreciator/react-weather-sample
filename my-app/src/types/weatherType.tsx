@@ -1,1 +1,0 @@
-export type WeatherType = "clear" | "rainy" | "cloudy" | "snowy" | "windy" | "stormy" | "foggy";

@@ -14,7 +14,11 @@ import type { Place } from "../../types/place";
 import WeatherDrawer from "./weatherDrawer";
 import { Toaster } from "../ui/sonner";
 import { toast } from "sonner";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
 import { CircleDollarSign } from "lucide-react";
 
 function Home() {
@@ -37,23 +41,29 @@ function Home() {
             <CardAction>
               <HoverCard>
                 <HoverCardTrigger asChild>
-                  <Button variant="link" className="animate-pulse">?</Button>
+                  <Button variant="link" className="animate-pulse">
+                    ?
+                  </Button>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80 bg-black text-white">
                   <div className="flex justify-between gap-4">
-                    <CircleDollarSign className="w-60  text-white" />            
+                    <CircleDollarSign className="w-60  text-white" />
                     <div className="space-y-1">
-                      <h4 className="text-sm font-semibold">@kimjongappreciator</h4>
+                      <h4 className="text-sm font-semibold">
+                        @kimjongappreciator
+                      </h4>
                       <p className="text-sm">
-                        No uso datos en tiempo real por que no quiero que me venga una factura sorpresa a fin de mes por el uso de un api si un bot intenta hacer scrapping.
+                        Uso un api de clima gratuita que tiene un limite de 1000
+                        consultas por dia, asi que si ves un mensaje de error es
+                        porque se ha alcanzado el limite.
                       </p>
                       <div className="text-muted-foreground text-xs">
-                        {":^)"} Gracias por tu comprension.
+                        {":^) "} Gracias por tu comprension.
                       </div>
                     </div>
                   </div>
                 </HoverCardContent>
-              </HoverCard>              
+              </HoverCard>
             </CardAction>
           </CardHeader>
           <CardContent>

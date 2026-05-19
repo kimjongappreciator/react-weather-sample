@@ -1,7 +1,7 @@
-import type { WeatherType } from "./weatherType";
+
 
 export type Result = {
-  weather: WeatherType;
+  weather: number; // código del clima según weatherDescriptions
   temperature: number;
   humidity: number;
 };

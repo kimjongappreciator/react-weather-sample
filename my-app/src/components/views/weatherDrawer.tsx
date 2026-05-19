@@ -1,15 +1,6 @@
 import type { Place } from "../../types/place";
 import { Button } from "../ui/button";
 import {
-  Cloud,
-  Sun,
-  CloudRain,
-  Snowflake,
-  Wind,
-  CloudLightning,
-  Haze,
-} from "lucide-react";
-import {
   Drawer,
   DrawerClose,
   DrawerContent,
@@ -17,11 +8,10 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "../ui/drawer";
-import type React from "react";
 import { useEffect, useState } from "react";
 import type { Result } from "../../types/result";
-import type { WeatherType } from "../../types/weatherType";
-import { simulatedData } from "../../types/simulatedData";
+import { weatherDescriptions } from "../../types/weatherDescriptions";
+import { getWeatherIcon, getWeatherStyle } from "../../lib/styling-util";
 
 type WeatherDrawerProps = {
   open: boolean;
@@ -29,63 +19,68 @@ type WeatherDrawerProps = {
   place: Place | null;
 };
 
-const iconMap: Record<string, React.ElementType> = {
-  clear: Sun,
-  rainy: CloudRain,
-  cloudy: Cloud,
-  snowy: Snowflake,
-  windy: Wind,
-  stormy: CloudLightning,
-  foggy: Haze,
-};
+async function fetchdata(lat: string, long: string) {
+  const params = new URLSearchParams({
+    latitude: lat,
+    longitude: long,
+    current:
+      "temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code",
+    timezone: "auto",
+  });
 
-const drawerStyle: Record<WeatherType, string> = {
-  clear: "mx-auto w-full max-w-lg bg-yellow-100 text-yellow-900",
-  rainy: "mx-auto w-full max-w-lg bg-blue-200 text-blue-900",
-  cloudy: "mx-auto w-full max-w-lg bg-gray-200 text-gray-1000",
-  snowy: "mx-auto w-full max-w-lg bg-blue-100 text-blue-900 border border-blue-300 shadow-inner",
-  windy: "mx-auto w-full max-w-lg bg-green-100 text-green-800",
-  stormy: "mx-auto w-full max-w-lg bg-gray-400 text-gray-700",
-  foggy: "mx-auto w-full max-w-lg bg-[#111111] text-[#cccccc] border border-[#2a2a2a] shadow-[0_0_30px_#0a0a0a] backdrop-blur-md font-mono",  
-};
-
-function getWeatherData(place: Place): Result {
-  return (
-    simulatedData[place.name] || {
-      weather: "clear",
-      temperature: 20,
-      humidity: 50,
-    }
-  );
+  try {
+    const res = await fetch(
+      `https://api.open-meteo.com/v1/forecast?${params}`,
+    );
+    const data = await res.json();
+    const current = data.current;
+    return {
+      weather: current.weather_code,
+      temperature: current.temperature_2m,
+      humidity: current.relative_humidity_2m,
+    };
+  } catch (error) {
+    console.error("Error fetching weather data:", error);
+    return null;
+  }
 }
-
-const translatedWeatherType: Record<string, string> = {
-  clear: "despejado",
-  rainy: "lluvioso",
-  cloudy: "nublado",
-  snowy: "nevado",
-  windy: "ventoso",
-  stormy: "tormentoso",
-  foggy: "neblinoso",
-};
 
 function WeatherDrawer({ open, onOpenChange, place }: WeatherDrawerProps) {
   const [result, setResult] = useState<Result | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (place) {
-      const data = getWeatherData(place);
-      setResult(data);
-    }
+    if (!place) return;
+    let cancelled = false;
+
+    const load = async () => {
+      setLoading(true);
+      const data = await fetchdata(place.lat, place.long);
+      if (!data) {
+        setError("Hubo un error al cargar los datos meteorologicos.");
+        setLoading(false);
+        return;
+      }
+      if (!cancelled) {
+        setResult(data);
+        setLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
   }, [place]);
 
-  const weather = result?.weather || "clear"; // usa el valor del resultado
-  const currentStyle = drawerStyle[weather] ?? "bg-white text-black";
-  const CurrentIcon = iconMap[weather] || Sun;
+  const weather = result?.weather;
+  const currentStyle = getWeatherStyle(weather);
+  const CurrentIcon = getWeatherIcon(weather);
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className={currentStyle}>
+      <DrawerContent className={currentStyle}  onCloseAutoFocus={(e) => e.preventDefault()}>
         <DrawerHeader>
           <DrawerTitle>Clima en {place?.name}</DrawerTitle>
           <DrawerDescription>
@@ -93,14 +88,20 @@ function WeatherDrawer({ open, onOpenChange, place }: WeatherDrawerProps) {
           </DrawerDescription>
         </DrawerHeader>
         <div>
-          <CurrentIcon className="mx-auto w-32 h-32" />
+          {loading ? (
+            <p className="text-center p-4">Cargando clima...</p>
+          ) : (
+            <CurrentIcon className="mx-auto w-32 h-32" />
+          )}{" "}
         </div>
 
-        <div className="p-4 text-sm text-muted-foreground text-center">
-          Clima simulado: {translatedWeatherType[weather]},{" "}
-          {result?.temperature}°C, humedad {result?.humidity}%
-        </div>
-
+        {error ? (
+          <p className="text-center p-4 text-red-500">{error}</p>
+        ) : (
+          <div className="p-4 text-sm text-muted-foreground text-center">
+            {`Clima: ${weatherDescriptions[result?.weather ?? 0]}, temperatura: ${result?.temperature}°C, humedad: ${result?.humidity}%`}
+          </div>
+        )}
         <div className="p-4">
           <DrawerClose asChild>
             <Button variant="outline" className="w-full">
